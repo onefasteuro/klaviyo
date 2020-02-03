@@ -3,6 +3,7 @@
 namespace onefasteuro\Klaviyo;
 
 use Requests_Session;
+use Requests;
 
 class KlaviyoService {
 	
@@ -21,6 +22,7 @@ class KlaviyoService {
 		$this->session = new Requests_Session($this->endpoint, $headers, []);
 	}
 	
+	
 	protected function checkParams(array $params)
 	{
 		if(!array_key_exists('api_key', $params)) {
@@ -34,11 +36,11 @@ class KlaviyoService {
 	
 	public function getLists()
 	{
-		$response = $this->session->get('api/v2/lists?' . $this->readyGetData());
+		$response = $this->session->request('api/v2/lists', [], $this->readyPostData(), Requests::GET);
 		return $this->respond($response);
 	}
 	
-	protected function readyPostData(&$data)
+	protected function readyPostData(&$data = [])
 	{
 		$data['api_key'] = $this->api_key;
 		return $data;
@@ -63,7 +65,7 @@ class KlaviyoService {
 		$data = $this->readyPostData($data);
 		
 
-		$response = $this->session->post($url, [], json_encode($data));
+		$response = $this->session->request($url, [], json_encode($data), Requests::POST);
 		
 		return $this->respond($response);
 	}
