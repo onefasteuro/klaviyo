@@ -34,7 +34,7 @@ class KlaviyoService {
 	
 	public function getLists()
 	{
-		$response = $this->session->get('api/v2/lists');
+		$response = $this->session->get('api/v2/lists?' . $this->readyGetData());
 		return $this->respond($response);
 	}
 	
@@ -42,6 +42,12 @@ class KlaviyoService {
 	{
 		$data['api_key'] = $this->api_key;
 		return $data;
+	}
+	
+	protected function readyGetData(&$data = [])
+	{
+		$data['api_key'] = $this->api_key;
+		return http_build_query($data);
 	}
 	
 	public function subscribeToList($list_id, $profiles = [])
